@@ -1,6 +1,3 @@
-# Evaluation Metrics Module for Petrol Price Forecasting
-# This module provides comprehensive evaluation metrics to compare LSTM and ARIMA model performance
-
 import numpy as np
 import pandas as pd
 from datetime import datetime
@@ -10,11 +7,11 @@ import warnings
 
 class InvalidValueStrategy(Enum):
     """Strategies for handling invalid values (NaN, infinity) in time series data."""
-    INTERPOLATE = "interpolate"  # Linear interpolation (recommended for time series)
-    REMOVE = "remove"           # Remove invalid pairs (may cause temporal misalignment)
-    FORWARD_FILL = "ffill"      # Forward fill missing values
-    MEAN_FILL = "mean_fill"     # Fill with mean of valid values
-    RAISE_ERROR = "error"       # Raise error if invalid values found
+    INTERPOLATE = "interpolate" 
+    REMOVE = "remove"           
+    FORWARD_FILL = "ffill"     
+    MEAN_FILL = "mean_fill"    
+    RAISE_ERROR = "error"      
 
 class EvaluationEngine:
     """
@@ -54,7 +51,6 @@ class EvaluationEngine:
             if len(y_true_clean) == 0:
                 return np.nan, {**metadata, 'error': 'No valid data points'}
             
-            # Calculate MAE
             mae = np.mean(np.abs(y_true_clean - y_pred_clean))
             
             return float(mae), metadata
@@ -111,7 +107,7 @@ class EvaluationEngine:
             ValueError: If predictions cannot be processed
         """
         try:
-            # Convert to numpy array if needed
+         
             if not isinstance(model_predictions, np.ndarray):
                 predictions = np.array(model_predictions)
             else:
@@ -125,7 +121,7 @@ class EvaluationEngine:
                 else:
                     warnings.warn(f"Unexpected prediction shape for {model_name}: {predictions.shape}")
             
-            # Apply inverse scaling if scaler is provided
+            # Apply inverse scaling 
             if scaler is not None:
                 try:
                     # Reshape for scaler if needed
@@ -137,7 +133,6 @@ class EvaluationEngine:
                     # Apply inverse transform
                     predictions = scaler.inverse_transform(predictions_reshaped)
                     
-                    # Flatten if needed
                     if predictions.ndim > 1 and predictions.shape[1] == 1:
                         predictions = predictions.flatten()
                         
@@ -288,7 +283,6 @@ class EvaluationEngine:
         }
         
         if invalid_count == 0:
-            # No invalid values, return as-is
             metadata['final_length'] = len(y_true)
             return y_true, y_pred, metadata
         
